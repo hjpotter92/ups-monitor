@@ -1,0 +1,13 @@
+[Unit]
+Description=Monitor and stream smart ups values.
+Wants=ups-monitor.timer
+
+[Service]
+Environment="THINGSPEAK_API_KEY=XXXXXXXXXXXX"
+Environment="THINGSPEAK_CHANNEL_ID=XXXXXXXXXX"
+Environment="NUT_UPS_NAME=XXXXXXXXX"
+ExecStart=/bin/sh /full/path/to/project/start.sh
+Type=oneshot
+
+[Install]
+WantedBy=multi-user.target

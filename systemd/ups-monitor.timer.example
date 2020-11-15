@@ -1,0 +1,11 @@
+[Unit]
+Description=Timer for monitoring service.
+Requires=ups-monitor.service
+
+[Timer]
+Unit=ups-monitor.service
+OnCalendar=minutely
+Persistent=true
+
+[Install]
+WantedBy=timers.target
