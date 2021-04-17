@@ -2,7 +2,8 @@ name: Publish discord webhook image to ECR.
 
 on:
   push:
-    - master
+    branches:
+      - master
 
 jobs:
   publish:
