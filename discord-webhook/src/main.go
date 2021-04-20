@@ -3,6 +3,8 @@ package main
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/parnurzeal/gorequest"
@@ -12,68 +14,127 @@ import (
 
 var discordWebhookURL = os.Getenv("DISCORD_WEBHOOK_URL")
 
-var webhookData = `{
-  "username": "UPS Monitor",
-  "avatar_url": "https://i.imgur.com/4M34hi2.png",
-  "content": "The bot detected a lower voltage level than recommended.",
-  "embeds": [
-    {
-      "author": {
-        "name": "UPS-bot",
-        "url": "https://github.com/hjpotter92/ups-monitor",
-        "icon_url": "https://thingspeak.com/apps/matlab_visualizations/403462"
-      },
-      "title": "Voltage fluctuation detected",
-      "url": "https://thingspeak.com/channels/1229924/",
-      "description": "The bot received a power fluctuation error.",
-      "color": 15258703,
-      "fields": [
-        {
-          "name": "Text",
-          "value": "More text",
-          "inline": true
-        },
-        {
-          "name": "Even more text",
-          "value": "Yup",
-          "inline": true
-        },
-        {
-          "name": "Use \"inline\": true parameter, if you want to display fields in the same line.",
-          "value": "okay..."
-        },
-        {
-          "name": "Thanks!",
-          "value": "You're welcome :wink:"
-        }
-      ],
-      "thumbnail": {
-        "url": "https://upload.wikimedia.org/wikipedia/commons/3/38/4-Nature-Wallpapers-2014-1_ukaavUI.jpg"
-      },
-      "image": {
-        "url": "https://upload.wikimedia.org/wikipedia/commons/5/5a/A_picture_from_China_every_day_108.jpg"
-      },
-      "footer": {
-        "text": "Woah! So cool! :smirk:",
-        "icon_url": "https://i.imgur.com/fKL31aD.jpg"
-      }
-    }
-  ]
-}`
+type Field struct {
+	Name   string `json:"name"`
+	Value  string `json:"value"`
+	Inline bool   `json:"inline,omitempty,default:false"`
+}
+
+type Author struct {
+	Name    string `json:"name"`
+	URL     string `json:"url"`
+	IconURL string `json:"icon_url"`
+}
+
+type Link struct {
+	URL string `json:"url"`
+}
+
+type Footer struct {
+	Text    string `json:"text"`
+	IconURL string `json:"icon_url"`
+}
+
+type Embed struct {
+	Author      *Author  `json:"author"`
+	Title       string   `json:"title"`
+	URL         string   `json:"url"`
+	Description string   `json:"description"`
+	Color       uint64   `json:"color,omitempty"`
+	Fields      *[]Field `json:"fields,omitempty"`
+	Thumbnail   *Link    `json:"thumbnail,omitempty"`
+	Image       *Link    `json:"image,omitempty"`
+	Footer      *Footer  `json:"footer,omitempty"`
+}
+
+type Webhookdata struct {
+	Username  string   `json:"username,omitempty"`
+	AvatarURL string   `json:"avatar_url,omitempty"`
+	Content   string   `json:"content"`
+	Embeds    *[]Embed `json:"embeds,omitempty"`
+}
+
+type Triggerdata struct {
+	Triggervalue float64
+	Channelid    uint64
+	Datetime     string
+}
+
+func ReadBody(body string) (Triggerdata, error) {
+	var trigger Triggerdata
+	log.Printf("Reading the body: '%s'", body)
+	json.Unmarshal([]byte(body), &trigger)
+	return trigger, nil
+}
+
+func GetWebhookData(trigger Triggerdata) *Webhookdata {
+	var color uint64
+	if trigger.Triggervalue <= 50 {
+		color = 16711682
+	} else {
+		color = 13423877
+	}
+	webhookData := &Webhookdata{
+		Username:  "UPS Monitor",
+		AvatarURL: "https://i.imgur.com/T4JpHlp.gif",
+		Content:   "The bot detected a voltage fluctuation.",
+		Embeds: &[]Embed{
+			{
+				Author: &Author{
+					Name: "UPS-bot",
+					URL:  "https://thingspeak.com/apps/matlab_visualizations/403462",
+				},
+				Title:       "Voltage fluctuation detected",
+				URL:         "https://thingspeak.com/channels/1229924/",
+				Description: fmt.Sprintf("A voltage fluctuation was detected at %s", trigger.Datetime),
+				Color:       color,
+				Fields: &[]Field{
+					{
+						Name:   "Triggered value",
+						Value:  fmt.Sprintf("%f", trigger.Triggervalue),
+						Inline: true,
+					},
+					{
+						Name:   "Thingspeak channel ID",
+						Value:  fmt.Sprintf("%d", trigger.Channelid),
+						Inline: true,
+					},
+					{
+						Name:  "Triggered at",
+						Value: trigger.Datetime,
+					},
+					{
+						Name:  "GitHub",
+						Value: "https://github.com/hjpotter92/ups-monitor",
+					},
+				},
+				Footer: &Footer{
+					Text:    "[GitHub](https://github.com/hjpotter92/ups-monitor)",
+					IconURL: ":git:",
+				},
+			},
+		},
+	}
+	return webhookData
+}
 
 func hello(ctx context.Context, request events.APIGatewayProxyRequest) (string, error) {
-	log.Println(ctx)
 	log.Printf("Processing request '%s'.", request.RequestContext.RequestID)
-	log.Printf("Request body: '%s'", request.Body)
+	body := request.Body
+	triggerData, _ := ReadBody(body)
+	log.Printf("Trigger data: %f, Date: %s", triggerData.Triggervalue, triggerData.Datetime)
+	webhookData := GetWebhookData(triggerData)
+	str, _ := json.Marshal(webhookData)
+	log.Println(string(str))
 	client := gorequest.New()
 	resp, body, _ := client.Post(discordWebhookURL).
 		Send(webhookData).
 		End()
-	log.Printf("%s, %s", resp, body)
+	log.Println(resp)
+	log.Println(body)
 	return `{"message": "Hello λ!"}`, nil
 }
 
 func main() {
-	// Make the handler available for Remote Procedure Call by AWS Lambda
 	lambda.Start(hello)
 }
