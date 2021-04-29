@@ -70,9 +70,14 @@ func ReadBody(body string) (Triggerdata, error) {
 func GetWebhookData(trigger Triggerdata) *Webhookdata {
 	var color uint64
 	if trigger.Triggervalue <= 50 {
-		color = 16711682
+		// Red #ff0000
+		color = 16711680
+	} else if trigger.Triggervalue <= 200 {
+		// Yellow/orange #cccc00
+		color = 13421568
 	} else {
-		color = 13423877
+		// Green #00cc33
+		color = 52275
 	}
 	webhookData := &Webhookdata{
 		Username:  "UPS Monitor",
@@ -118,9 +123,8 @@ func GetWebhookData(trigger Triggerdata) *Webhookdata {
 	return webhookData
 }
 
-func hello(ctx context.Context, request events.APIGatewayProxyRequest) (string, error) {
-	log.Printf("Processing request '%s'.", request.RequestContext.RequestID)
-	body := request.Body
+func hello(ctx context.Context, snsEvent events.SNSEvent) (string, error) {
+	body := snsEvent.Records[0].SNS.Message
 	triggerData, _ := ReadBody(body)
 	log.Printf("Trigger data: %f, Date: %s", triggerData.Triggervalue, triggerData.Datetime)
 	webhookData := GetWebhookData(triggerData)

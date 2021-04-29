@@ -1,0 +1,32 @@
+{
+  "name": "queue-notifications",
+  "version": "1.0.0",
+  "description": "Queue notifications received from ThingHTTP hook to SNS topic.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/hjpotter92/ups-monitor.git"
+  },
+  "keywords": [
+    "ups",
+    "monitor",
+    "powercut",
+    "bescom",
+    "power",
+    "voltage",
+    "sns",
+    "lambda"
+  ],
+  "author": "hjpotter92",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hjpotter92/ups-monitor/issues"
+  },
+  "homepage": "https://github.com/hjpotter92/ups-monitor#readme",
+  "dependencies": {
+    "aws-sdk": "^2.895.0"
+  }
+}
