@@ -87,7 +87,7 @@ func GetWebhookData(trigger Triggerdata) *Webhookdata {
 			{
 				Author: &Author{
 					Name: "UPS-bot",
-					URL:  "https://thingspeak.com/apps/matlab_visualizations/403462",
+					IconURL: "https://cdn.discordapp.com/embed/avatars/0.png",
 				},
 				Title:       "Voltage fluctuation detected",
 				URL:         "https://thingspeak.com/channels/1229924/",
@@ -109,13 +109,17 @@ func GetWebhookData(trigger Triggerdata) *Webhookdata {
 						Value: trigger.Datetime,
 					},
 					{
+						Name:  "Voltage graph visualisation",
+						Value: "https://thingspeak.com/apps/matlab_visualizations/403462",
+					},
+					{
 						Name:  "GitHub",
 						Value: "https://github.com/hjpotter92/ups-monitor",
 					},
 				},
 				Footer: &Footer{
 					Text:    "[GitHub](https://github.com/hjpotter92/ups-monitor)",
-					IconURL: ":git:",
+					IconURL: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
 				},
 			},
 		},
