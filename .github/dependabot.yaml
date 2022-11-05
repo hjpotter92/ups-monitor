@@ -1,0 +1,27 @@
+version: 2
+
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /discord-webhook
+    schedule:
+      interval: daily
+
+  - package-ecosystem: pip
+    directory: /
+    schedule:
+      interval: daily
+
+  - package-ecosystem: npm
+    directory: /slack-bot
+    schedule:
+      interval: daily
+
+  - package-ecosystem: npm
+    directory: /queue-notifications
+    schedule:
+      interval: daily
