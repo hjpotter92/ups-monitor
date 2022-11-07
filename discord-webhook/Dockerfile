@@ -1,17 +1,19 @@
-FROM golang:latest as build
+FROM	golang:1.19.3-alpine3.16	as	build
 
-WORKDIR /src
+WORKDIR	/src
 
-ADD go.mod go.sum ./
+ADD	go.mod	go.sum	./
 
-RUN go mod download
+RUN	go mod download
 
-ADD . .
+ADD	.	.
 
-RUN go build -o /main src/main.go
+RUN	go build -o /main src/main.go
 
-FROM golang:latest
+FROM	alpine:3.16.2
 
-COPY --from=build /main /main
+LABEL maintainer="hjpotter92"
 
-ENTRYPOINT ["/main"]
+COPY --from=build	/main	/main
+
+ENTRYPOINT	["/main"]
