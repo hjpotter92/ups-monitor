@@ -6,7 +6,7 @@ Wants=ups-monitor.timer
 Environment="THINGSPEAK_API_KEY=XXXXXXXXXXXX"
 Environment="THINGSPEAK_CHANNEL_ID=XXXXXXXXXX"
 Environment="NUT_UPS_NAME=XXXXXXXXX"
-ExecStart=/bin/sh /full/path/to/project/start.sh
+ExecStart=/bin/bash /full/path/to/project/start.bash
 Type=oneshot
 
 [Install]
