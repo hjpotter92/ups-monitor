@@ -27,6 +27,6 @@
   },
   "homepage": "https://github.com/hjpotter92/ups-monitor#readme",
   "dependencies": {
-    "aws-sdk": "^2.1253.0"
+    "aws-sdk": "^2.1269.0"
   }
 }
