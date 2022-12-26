@@ -4,7 +4,7 @@
   "description": "Bot for interaction with slack channels.",
   "main": "index.js",
   "dependencies": {
-    "@slack/web-api": "^6.7.2",
+    "@slack/web-api": "^6.8.0",
     "asynckit": "^0.4.0",
     "axios": "^0.19.2",
     "combined-stream": "^1.0.8",
