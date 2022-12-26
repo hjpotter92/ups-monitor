@@ -1,5 +1,5 @@
 certifi==2022.12.7
-chardet==5.0.0
+chardet==5.1.0
 docopt==0.6.2
 idna==3.4
 nut2==2.1.1
