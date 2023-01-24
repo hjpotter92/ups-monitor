@@ -20,7 +20,7 @@
     "p-finally": "^3.0.0",
     "p-queue": "^7.3.0",
     "p-retry": "^5.1.2",
-    "p-timeout": "^6.0.0",
+    "p-timeout": "^6.1.0",
     "retry": "^0.13.1"
   },
   "devDependencies": {},
