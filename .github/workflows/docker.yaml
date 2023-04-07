@@ -43,7 +43,7 @@ jobs:
 
       - name: Generate docker image names
         id: image
-        uses: actions/github-script@v6.4.0
+        uses: actions/github-script@v6.4.1
         with:
           script: |
             const actor = '${{ github.actor }}';
