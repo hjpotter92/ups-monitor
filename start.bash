@@ -15,7 +15,7 @@ else
   python3 -m venv .venv
   echo "Created new virtual env"
   . .venv/bin/activate
-  pip install -U requirements.txt
+  pip install -Ur requirements.txt
   echo "Update venv with required packages"
 fi
 
