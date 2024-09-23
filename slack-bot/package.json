@@ -8,7 +8,7 @@
     "asynckit": "^0.4.0",
     "axios": "^1.2.1",
     "combined-stream": "^1.0.8",
-    "debug": "^4.3.4",
+    "debug": "^4.3.7",
     "delayed-stream": "^1.0.0",
     "eventemitter3": "^5.0.0",
     "follow-redirects": "^1.5.10",
