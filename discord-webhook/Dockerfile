@@ -10,7 +10,7 @@ ADD	.	.
 
 RUN	go build -o /main src/main.go
 
-FROM	alpine:3.20.3
+FROM	alpine:3.21.0
 
 LABEL maintainer="hjpotter92"
 
